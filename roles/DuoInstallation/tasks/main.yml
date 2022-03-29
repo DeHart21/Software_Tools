@@ -9,13 +9,13 @@
           - gcc
         state: present
 
-    - name: Download Duo  MFA
+    - name: Download Duo MFA from source
       get_url:
         url: https://dl.duosecurity.com/duo_unix-latest.tar.gz
-        dest: /root/
+        dest: /tmp/
 
-    - name: Find the Duo tarball
-      shell: ls /root/ | grep 'duo_unix' | grep gz
+    - name: locate the Duo tarball for Ansible
+      shell: ls /tmp/ | grep 'duo_unix' | grep gz
       register: duotarball
 
     - name: Print return information from the previous task
@@ -25,15 +25,15 @@
     - name: Uncompress Duo MFA Tarball
       unarchive:
         remote_src: yes
-        src: "/root/{{ duotarball.stdout }}"
-        dest: /root/
+        src: "/tmp/{{ duotarball.stdout }}"
+        dest: /tmp/
 
     - name: Pull duo directory name
-      shell: ls /root/ | grep duo_unix | grep -v gz
+      shell: ls /tmp/ | grep duo_unix | grep -v gz
       register: duodirectory
 
-    - name: cd to /root/duo_unix-1.12.0 and install MFA
-      shell: cd /root/{{ duodirectory.stdout }}; ./configure --with-pam --prefix=/usr; make && make install
+    - name: cd to /tmp/duo_unix directory and install MFA
+      shell: cd /tmp/{{ duodirectory.stdout }}; ./configure --with-pam --prefix=/usr; make && make install
 
 
     - name: Add the ikey address to Duo config.
@@ -76,7 +76,7 @@
       lineinfile:
         path: '{{ duopampath }}'
         regex: '^gecos_username_pos'
-        line: 'gecos_username_pos=6'
+        line: 'gecos_username_pos=4'
 
 
     - include_tasks: PassandPubkeyDuo.yml

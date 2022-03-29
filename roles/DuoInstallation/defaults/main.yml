@@ -1,2 +1,16 @@
 ---
 # defaults file for roles/DuoInstallation
+
+whitelistname: allowlist
+listofusers:
+  - user1
+  - user2
+
+wlgroups: '*,allowlist'
+duopampath: /etc/duo/login_duo.conf
+pamsshpath: /etc/pam.d/sshd
+sshpath: /etc/ssh/sshd_config
+restartsshd: true
+
+# When possible use Pubkey over PassandPubkey for security purposes
+DuoSetupMethod: "Pubkey"
