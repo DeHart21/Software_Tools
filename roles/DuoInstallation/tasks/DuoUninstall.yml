@@ -1,0 +1,23 @@
+- name: Uninstall Duo MFA
+  hosts: all
+  become: true
+  tasks:
+    - name: remove files and directories
+      file:
+        path: /etc/duo
+        state: directory
+        recurse: true
+        
+    - name: remove files and directories
+      file:
+        path: /usr/sbin/login_duo
+        state: absent
+      with_items:
+        - /usr/sbin/login_duo
+        - /lib64/security/pam_duo.so
+
+
+    - name: remove duo from yum
+      yum:
+        name: duo_unix
+        state: absent

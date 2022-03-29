@@ -1,0 +1,76 @@
+    - name: Comment out sshd lines
+      lineinfile:
+        path: '{{ pamsshdpath }}'
+        regex: '^auth(\s+)required(\s+)pam_sepermit.so$'
+        line: '#auth      required     pam_sepermit.so'
+  
+
+    - name: Comment out sshd lines
+      lineinfile:
+        path: '{{ pamsshdpath }}'
+        regex: '^auth(\s+)substack(\s+)password-auth$'
+        line: '#auth       substack     password-auth'
+
+
+    - name: Comment out sshd lines
+      lineinfile:
+        path: '{{ pamsshdpath }}'
+        regex: '^auth(\s+)include(\s+)postlogin$'
+        line: '#auth       include      postlogin'
+
+    - name: Add in block for mfa for /etc/pam.d/sshd
+      blockinfile:
+        path: '{{ pamsshdpath }}'
+        insertafter: '#auth       include      postlogin'
+        marker: "#DUO MFA CONFIGURATIONS"
+        block: |
+          auth required pam_sepermit.so
+          auth   substack         password-auth
+          auth  sufficient /lib64/security/pam_duo.so
+          auth  required   pam_deny.so
+          auth  include postlogin
+
+
+    - name: sshd_config file modify UsePam
+      lineinfile:
+        path: '{{ sshpath }}'
+        regex: '^UsePAM'
+        line: 'UsePAM yes'
+
+    - name: sshd_config file modify PermitTunnel
+      lineinfile:
+        path: '{{ sshpath }}'
+        regex: '^PermitTunnel'
+        line: 'PermitTunnel no'
+
+    - name: sshd_config file modify PermitTunnel
+      lineinfile:
+        path: '{{ sshpath }}'
+        regex: '^AllowTcpForwarding'
+        line: 'AllowTcpForwarding no'
+
+    - name: sshd_config file modify PermitTunnel
+      lineinfile:
+        path: '{{ sshpath }}'
+        regex: '^ChallengeResponseAuthentication'
+        line: 'ChallengeResponseAuthentication yes'
+
+    - name: sshd_config file modify PermitTunnel
+      lineinfile:
+        path: '{{ sshpath }}'
+        regex: '^PasswordAuthentication'
+        line: 'PasswordAuthentication yes'
+
+    - name: sshd_config file modify PermitTunnel
+      lineinfile:
+        path: '{{ sshpath }}'
+        regex: '^UseDNS'
+        line: 'UseDNS no'
+
+
+    - name: sshd_config file modify PermitTunnel
+      lineinfile:
+        path: '{{ sshpath }}'
+        regex: '^PubkeyAuthentication'
+        line: 'PubkeyAuthentication yes'
+

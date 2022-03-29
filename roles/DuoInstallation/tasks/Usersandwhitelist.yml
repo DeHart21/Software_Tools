@@ -1,0 +1,20 @@
+    - name: Creating whitelist
+      group:
+        name: "{{ whitelistname }}"
+        state: present
+
+    - name: Checking which users exists
+      shell: getent passwd | sed -e 's/:.*//g' | grep {{ item }}
+      register: testusers
+      loop: "{{ listofusers }}"
+      ignore_errors: yes
+
+
+    - name: Add users to the whitelist
+      ansible.builtin.user:
+        name: "{{ item.stdout }}"
+        groups: "{{ whitelistname }}"
+        append: yes
+      loop: "{{ testusers.results }}"
+      ignore_errors: yes
+

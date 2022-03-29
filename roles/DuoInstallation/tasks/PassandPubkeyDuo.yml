@@ -1,0 +1,65 @@
+    - name: sshd_config file modify UsePam
+      lineinfile:
+        path: '{{ sshpath }}'
+        regex: '^UsePAM'
+        line: 'UsePAM no'
+
+    - name: sshd_config file modify PermitTunnel
+      lineinfile:
+        path: '{{ sshpath }}'
+        regex: '^PermitTunnel'
+        line: 'PermitTunnel no'
+
+    - name: sshd_config file modify AllowTcpForwarding
+      lineinfile:
+        path: '{{ sshpath }}'
+        regex: '^AllowTcpForwarding'
+        line: 'AllowTcpForwarding no'
+
+    - name: sshd_config file modify ChallengeResponseAuthentication
+      lineinfile:
+        path: '{{ sshpath }}'
+        regex: '^ChallengeResponseAuthentication'
+        line: 'ChallengeResponseAuthentication yes'
+
+    - name: sshd_config file modify PasswordAuthentication
+      lineinfile:
+        path: '{{ sshpath }}'
+        regex: '^PasswordAuthentication'
+        line: 'PasswordAuthentication yes'
+
+    - name: sshd_config file modify UseDNS
+      lineinfile:
+        path: '{{ sshpath }}'
+        regex: '^UseDNS'
+        line: 'UseDNS no'
+
+
+    - name: sshd_config file modify PubkeyAuthentication
+      lineinfile:
+        path: '{{ sshpath }}'
+        regex: '^PubkeyAuthentication'
+        line: 'PubkeyAuthentication yes'
+
+
+    - name: sshd_config file modify AuthenticationMethods 
+      lineinfile:
+        path: '{{ sshpath }}'
+        regex: '^AuthenticationMethods'
+        line: 'AuthenticationMethods publickey password'
+
+
+    - name: sshd_config file modify ForceCommand 
+      lineinfile:
+        path: '{{ sshpath }}'
+        regex: '^ForceCommand'
+        line: 'ForceCommand /usr/sbin/login_duo'
+
+
+    - name: chown to correct permissions on the /etc/duo directory and subdirectories
+      file:
+        path: /etc/duo
+        state: directory
+        owner: sshd
+        group: sshd
+        recurse: yes

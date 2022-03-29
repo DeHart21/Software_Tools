@@ -1,0 +1,5 @@
+- name: restart the sshd process
+  systemd:
+    state: restarted
+    name: sshd
+    daemon_reload: yes
